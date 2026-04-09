@@ -1,0 +1,98 @@
+[
+  {
+    "id": "fd108d97-06bc-452d-8634-1b09db27b6c5",
+    "email": "hulk@user.com",
+    "passwordHash": "$2a$10$YukZAhTHbgf7kQbz7LzfYuIbsQWIiGVloItf6syXaBwqJq//jiU5u",
+    "firstName": "Hulk",
+    "lastName": "Smash",
+    "phone": "1234567890",
+    "profileData": {
+      "profileFor": "Myself",
+      "gender": "Male",
+      "dob": "1997-05-15",
+      "religion": "Hindu",
+      "caste": "Choudhary",
+      "education": "B.E",
+      "profession": "Civil Engineer",
+      "maritalStatus": "Never Married"
+    },
+    "profilePhoto": "/uploads/profiles/profilePhoto-1774701960583-442834021.jpg",
+    "status": "active",
+    "paymentStatus": "paid",
+    "createdAt": "2026-03-28T12:46:00.679Z",
+    "updatedAt": "2026-03-28T12:46:42.411Z",
+    "transactionId": "TXN-1774701965811-8632"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+    "email": "priya.sharma@matrimony.com",
+    "passwordHash": "$2a$10$dummyhash1notrealusedatall111111111111111111111111111",
+    "firstName": "Priya",
+    "lastName": "Sharma",
+    "phone": "9876543210",
+    "profileData": {
+      "profileFor": "Myself",
+      "gender": "Female",
+      "dob": "1999-03-22",
+      "religion": "Hindu",
+      "caste": "Brahmin",
+      "education": "M.Tech",
+      "profession": "Software Engineer",
+      "maritalStatus": "Never Married"
+    },
+    "profilePhoto": null,
+    "status": "active",
+    "paymentStatus": "paid",
+    "createdAt": "2026-03-20T08:00:00.000Z",
+    "updatedAt": "2026-03-20T08:00:00.000Z",
+    "transactionId": "TXN-DEMO-0001"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567802",
+    "email": "ananya.reddy@matrimony.com",
+    "passwordHash": "$2a$10$dummyhash2notrealusedatall222222222222222222222222222",
+    "firstName": "Ananya",
+    "lastName": "Reddy",
+    "phone": "9845001122",
+    "profileData": {
+      "profileFor": "Myself",
+      "gender": "Female",
+      "dob": "1998-07-10",
+      "religion": "Hindu",
+      "caste": "Reddy",
+      "education": "MBA",
+      "profession": "Business Analyst",
+      "maritalStatus": "Never Married"
+    },
+    "profilePhoto": null,
+    "status": "active",
+    "paymentStatus": "paid",
+    "createdAt": "2026-03-21T10:30:00.000Z",
+    "updatedAt": "2026-03-21T10:30:00.000Z",
+    "transactionId": "TXN-DEMO-0002"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567803",
+    "email": "deepika.nair@matrimony.com",
+    "passwordHash": "$2a$10$dummyhash3notrealusedatall333333333333333333333333333",
+    "firstName": "Deepika",
+    "lastName": "Nair",
+    "phone": "9988776655",
+    "profileData": {
+      "profileFor": "Myself",
+      "gender": "Female",
+      "dob": "2000-11-05",
+      "religion": "Hindu",
+      "caste": "Nair",
+      "education": "MBBS",
+      "profession": "Doctor",
+      "maritalStatus": "Never Married"
+    },
+    "profilePhoto": null,
+    "status": "active",
+    "paymentStatus": "paid",
+    "createdAt": "2026-03-22T14:00:00.000Z",
+    "updatedAt": "2026-03-22T14:00:00.000Z",
+    "transactionId": "TXN-DEMO-0003"
+  }
+]

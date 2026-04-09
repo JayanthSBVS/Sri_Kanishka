@@ -1,0 +1,34 @@
+[
+  {
+    "id": "u-001",
+    "name": "Admin User",
+    "email": "admin@srikanishka.com",
+    "passwordHash": "$2a$10$uEZAhFcdBxTGH8JeUxFRIOjYeAcfEjjdXJXCEx9c7KFn6MVkL6zSe",
+    "role": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "u-002",
+    "name": "Test User",
+    "email": "user@example.com",
+    "passwordHash": "$2a$10$mNnEX7uJeM7UUgGMRXHRlOoexqS6UV9m2XzzTYDmxSd4F51QS/NE.",
+    "role": "user",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "u-8264b282-73c7-4f50-b858-d83ff24e00da",
+    "name": "New Guy",
+    "email": "newguy@test.com",
+    "passwordHash": "$2a$10$FEA/ukDpq6l6y.P6Vuxyy.Sy6OQCBF3tnP0hY2QLR6dzRTgLx5ix6",
+    "role": "user",
+    "createdAt": "2026-03-28T10:26:52.902Z"
+  },
+  {
+    "id": "u-a9b78b89-2200-4ef7-8ca8-7d3385fae813",
+    "name": "hulk",
+    "email": "hulk@user.com",
+    "passwordHash": "$2a$10$1FK6tvB9cxXr07drFXu3y.3ZKtHfS.RWIK6l/aDEtMYepcJsxjbF.",
+    "role": "user",
+    "createdAt": "2026-03-28T11:07:39.068Z"
+  }
+]
