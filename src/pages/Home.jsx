@@ -319,7 +319,7 @@ const Home = () => {
                         <Link to="/services/real-estate" className="group relative bg-white/90 backdrop-blur-sm rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/50">
                             <div className="h-64 overflow-hidden relative">
                                 <div className="absolute inset-0 bg-emerald-600/20 group-hover:bg-emerald-600/10 transition-colors z-10"></div>
-                                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Real Estate" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80" onError={(e) => e.currentTarget.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800'} alt="Real Estate" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
                                 <div className="absolute top-4 left-4 z-20">
                                     <span className="bg-white/90 backdrop-blur-sm text-emerald-800 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-2">
                                         <Building size={14} /> Estates
@@ -338,7 +338,7 @@ const Home = () => {
                         <Link to="/services/abroad-consultancy" className="group relative bg-white/90 backdrop-blur-sm rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/50">
                             <div className="h-64 overflow-hidden relative">
                                 <div className="absolute inset-0 bg-sky-600/20 group-hover:bg-sky-600/10 transition-colors z-10"></div>
-                                <img src="https://images.unsplash.com/photo-1523050853064-dbad323bce9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Abroad Consultancy" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                                <img src="/abroad.png" onError={(e) => e.currentTarget.src = 'https://images.unsplash.com/photo-1436491865332-7a61ce2ed9ce?auto=format&fit=crop&w=800&q=80'} alt="Abroad Consultancy" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
                                 <div className="absolute top-4 left-4 z-20">
                                     <span className="bg-white/90 backdrop-blur-sm text-sky-800 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-2">
                                         <Globe size={14} /> Global
@@ -357,7 +357,7 @@ const Home = () => {
                         <Link to="/services/groceries" className="group relative bg-white/90 backdrop-blur-sm rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/50">
                             <div className="h-64 overflow-hidden relative">
                                 <div className="absolute inset-0 bg-orange-600/20 group-hover:bg-orange-600/10 transition-colors z-10"></div>
-                                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Groceries" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80" onError={(e) => e.currentTarget.src = 'https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?auto=format&fit=crop&q=80&w=800'} alt="Groceries" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
                                 <div className="absolute top-4 left-4 z-20">
                                     <span className="bg-white/90 backdrop-blur-sm text-orange-800 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-2">
                                         <ShoppingCart size={14} /> Groceries
