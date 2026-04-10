@@ -30,5 +30,29 @@
     "passwordHash": "$2a$10$1FK6tvB9cxXr07drFXu3y.3ZKtHfS.RWIK6l/aDEtMYepcJsxjbF.",
     "role": "user",
     "createdAt": "2026-03-28T11:07:39.068Z"
+  },
+  {
+    "id": "u-4613b769-fda5-47fa-bb46-86508eb90fa3",
+    "name": "hulk",
+    "email": "hulk@jay.com",
+    "passwordHash": "$2a$10$8asaqU5MIW7GVeNd3cjY2.RTVfXRIJiNIUCTOkH9SnYNxfrkmZMiS",
+    "role": "user",
+    "createdAt": "2026-04-09T11:31:04.701Z"
+  },
+  {
+    "id": "u-78615e8d-1c87-49f6-ab9d-0a72041381e0",
+    "name": "Test Worker",
+    "email": "adminworker@test.com",
+    "passwordHash": "$2a$10$yGBUgPe8OzTdh2RSBfUCNuxmNnUokFpAhvY/Nfh/E1fdi6XgocIpa",
+    "role": "user",
+    "createdAt": "2026-04-10T03:46:36.353Z"
+  },
+  {
+    "id": "u-36fe9e0a-e855-49b4-99cb-6bd382a61630",
+    "name": "Test Worker",
+    "email": "worker@test.com",
+    "passwordHash": "$2a$10$s7TQWQOhKHnhrI.U70MHouzybH7HT7KA2fbObMu/StpENW6siatEa",
+    "role": "user",
+    "createdAt": "2026-04-10T03:47:55.905Z"
   }
 ]

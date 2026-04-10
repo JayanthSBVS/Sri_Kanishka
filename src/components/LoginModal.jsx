@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUI } from '../context/UIContext';
 
@@ -11,11 +11,14 @@ const LoginModal = () => {
     const [name, setName] = useState('');
     const [isSignup, setIsSignup] = useState(false);
     const [error, setError] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setError('');
+        setSuccessMsg('');
         
         const endpoint = isSignup ? 'register' : 'login';
         const payload = isSignup ? { name, email, password } : { email, password };
@@ -28,9 +31,19 @@ const LoginModal = () => {
             const data = await res.json();
             
             if (res.ok && data.success) {
-                loginUser(data.data.token, data.data.user);
-                showToast(isSignup ? 'Account created successfully!' : 'Login Successful!', 'success');
-                closeLogin();
+                if (isSignup) {
+                    // Registration success → switch to Login form
+                    setIsSignup(false);
+                    setPassword('');
+                    setName('');
+                    setShowPassword(false);
+                    setSuccessMsg('✅ Account created! Please sign in with your credentials.');
+                } else {
+                    // Login success → log user in and close modal
+                    loginUser(data.data.token, data.data.user);
+                    showToast('Login Successful! Welcome back.', 'success');
+                    closeLogin();
+                }
             } else {
                 setError(data.message || (isSignup ? 'Registration failed' : 'Login failed'));
             }
@@ -44,6 +57,7 @@ const LoginModal = () => {
     const toggleMode = () => {
         setIsSignup(!isSignup);
         setError('');
+        setSuccessMsg('');
         setPassword('');
     };
 
@@ -80,6 +94,11 @@ const LoginModal = () => {
                         </div>
 
                         <div className="p-8">
+                            {successMsg && (
+                                <div className="mb-4 bg-green-50 text-green-700 p-3 rounded-lg text-sm border border-green-200">
+                                    {successMsg}
+                                </div>
+                            )}
                             {error && (
                                 <div className="mb-4 bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100">
                                     {error}
@@ -117,14 +136,23 @@ const LoginModal = () => {
                                         <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Password</label>
                                         {!isSignup && <a href="#" className="text-xs text-gold-600 font-semibold hover:underline">Forgot?</a>}
                                     </div>
-                                    <input
-                                        type="password"
-                                        required
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="••••••••"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gold-400 focus:border-transparent outline-none transition-all placeholder:text-gray-400 text-gray-800"
-                                    />
+                                    <div className="relative">
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            required
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="••••••••"
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gold-400 focus:border-transparent outline-none transition-all placeholder:text-gray-400 text-gray-800 pr-12"
+                                        />
+                                        <button
+                                            type="button"
+                                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="flex items-center">

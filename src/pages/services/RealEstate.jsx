@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Building, MapPin, Hammer, CheckCircle, ArrowRight, Sparkles, 
     Home, Landmark, Users, Plus, Search, Filter, Camera, 
-    X, Tag, Phone, IndianRupee, Clock
+    X, Tag, Phone, IndianRupee, Clock, User
 } from 'lucide-react';
 import { useUI } from '../../context/UIContext';
 
 const RealEstate = () => {
-    const { openServiceModal } = useUI();
+    const { openServiceModal, openLogin, user } = useUI();
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -87,7 +87,9 @@ const RealEstate = () => {
         beds: '',
         seller: '',
         contact: '',
-        img: ''
+        img: '',
+        size: '',
+        document: ''
     });
 
     const categories = [
@@ -103,6 +105,28 @@ const RealEstate = () => {
         return matchesCategory && matchesSearch;
     });
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setNewAd({ ...newAd, img: reader.result });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setNewAd({ ...newAd, document: reader.result, documentName: file.name });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleAddListing = (e) => {
         e.preventDefault();
         const ad = {
@@ -113,7 +137,7 @@ const RealEstate = () => {
         };
         setListings([ad, ...listings]);
         setIsFormOpen(false);
-        setNewAd({ title: '', price: '', location: '', category: 'property', type: 'Apartment', description: '', beds: '', seller: '', contact: '', img: '' });
+        setNewAd({ title: '', price: '', location: '', category: 'property', type: 'Apartment', description: '', beds: '', seller: '', contact: '', img: '', size: '', document: '' });
     };
 
     const handleDeleteListing = (id) => {
@@ -152,12 +176,30 @@ const RealEstate = () => {
                         
                         <div className="flex flex-wrap gap-4">
                             <button
-                                onClick={() => setIsFormOpen(true)}
+                                onClick={() => user ? setIsFormOpen(true) : openLogin()}
                                 className="px-8 py-4 rounded-2xl bg-white text-emerald-900 font-bold shadow-xl hover:bg-emerald-50 transition-all flex items-center gap-2"
                             >
                                 <Plus size={20} />
                                 Post Free Ad
                             </button>
+                            {user ? (
+                                <button
+                                    className="px-8 py-4 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold shadow-xl flex items-center gap-2"
+                                >
+                                    <div className="w-6 h-6 rounded-full bg-emerald-400 flex items-center justify-center text-emerald-900 text-[10px]">
+                                        {user.name.charAt(0)}
+                                    </div>
+                                    {user.name} (Logged In)
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={openLogin}
+                                    className="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold shadow-xl hover:bg-white/20 transition-all flex items-center gap-2"
+                                >
+                                    <User size={20} />
+                                    Login
+                                </button>
+                            )}
                             <div className="relative flex-1 min-w-[300px]">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-300/70" size={20} />
                                 <input 
@@ -348,6 +390,15 @@ const RealEstate = () => {
                                                 onChange={(e) => setNewAd({...newAd, type: e.target.value})}
                                             />
                                         </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold text-slate-700 ml-1">Size (sq ft / acres)</label>
+                                            <input 
+                                                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 outline-none transition-all bg-slate-50"
+                                                placeholder="e.g. 1500 sq ft or 2 Acres"
+                                                value={newAd.size}
+                                                onChange={(e) => setNewAd({...newAd, size: e.target.value})}
+                                            />
+                                        </div>
                                         <div className="space-y-2 md:col-span-2">
                                             <label className="text-sm font-bold text-slate-700 ml-1">Location</label>
                                             <div className="relative">
@@ -362,17 +413,66 @@ const RealEstate = () => {
                                             </div>
                                         </div>
                                         <div className="space-y-2 md:col-span-2">
-                                            <label className="text-sm font-bold text-slate-700 ml-1">Image URL (Optional)</label>
+                                            <label className="text-sm font-bold text-slate-700 ml-1">Upload Image (Optional)</label>
                                             <div className="relative">
-                                                <Camera size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                                                 <input 
-                                                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 outline-none transition-all bg-slate-50"
-                                                    placeholder="Paste an image link from the web"
-                                                    value={newAd.img}
-                                                    onChange={(e) => setNewAd({...newAd, img: e.target.value})}
+                                                    type="file"
+                                                    accept="image/*"
+                                                    id="image-upload"
+                                                    className="hidden"
+                                                    onChange={handleImageChange}
                                                 />
+                                                <label 
+                                                    htmlFor="image-upload"
+                                                    className="w-full flex flex-col items-center justify-center gap-3 px-4 py-8 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 cursor-pointer transition-all group"
+                                                >
+                                                    {newAd.img ? (
+                                                        <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
+                                                            <img src={newAd.img} alt="Preview" className="w-full h-full object-cover" />
+                                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                                <span className="text-white font-bold text-sm">Change Image</span>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-400 group-hover:text-emerald-500 shadow-sm transition-colors">
+                                                                <Camera size={24} />
+                                                            </div>
+                                                            <div className="text-center">
+                                                                <p className="text-sm font-bold text-slate-900">Click to upload image</p>
+                                                                <p className="text-xs text-slate-500 mt-1">Directly select a photo from your device</p>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </label>
                                             </div>
                                         </div>
+                                        <div className="space-y-2 md:col-span-2">
+                                            <label className="text-sm font-bold text-slate-700 ml-1">Documents (Optional)</label>
+                                            <div className="relative">
+                                                <input 
+                                                    type="file"
+                                                    id="doc-upload"
+                                                    className="hidden"
+                                                    onChange={handleFileChange}
+                                                />
+                                                <label 
+                                                    htmlFor="doc-upload"
+                                                    className="w-full flex items-center gap-4 px-6 py-4 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-200 cursor-pointer transition-all"
+                                                >
+                                                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-slate-400">
+                                                        <Plus size={20} />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-slate-900">
+                                                            {newAd.documentName || "Upload property documents (PDF, Doc...)"}
+                                                        </p>
+                                                        <p className="text-xs text-slate-500">Legal papers, floor plans, etc.</p>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+
                                         <div className="space-y-2 md:col-span-2">
                                             <label className="text-sm font-bold text-slate-700 ml-1">Description</label>
                                             <textarea 

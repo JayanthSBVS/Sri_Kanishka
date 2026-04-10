@@ -7,6 +7,7 @@ import Topbar from './components/Topbar'
 
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import Users from './pages/Users'
 import ITTraining from './pages/services/ITTraining'
 import GlobalMatrimony from './pages/services/GlobalMatrimony'
 import MeditationSpirituality from './pages/services/MeditationSpirituality'
@@ -36,7 +37,7 @@ function AdminLayout({ children }) {
 export default function App() {
   return (
     <AdminAuthProvider>
-      <Router>
+      <Router basename="/admin">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -44,6 +45,12 @@ export default function App() {
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <AdminLayout><Dashboard /></AdminLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/users" element={
+            <ProtectedRoute>
+              <AdminLayout><Users /></AdminLayout>
             </ProtectedRoute>
           } />
 

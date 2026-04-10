@@ -1,19 +1,8 @@
 import React, { useState } from 'react'
 
-const PROPERTIES = [
-  { id: 'RE-001', title: 'Luxury Villa — Bani Park', type: 'Residential', location: 'Jaipur, Rajasthan', price: '₹2.5 Cr', status: 'available', area: '3200 sq ft', beds: 4, enquiries: 12 },
-  { id: 'RE-002', title: 'Commercial Complex — Vaishali Nagar', type: 'Commercial', location: 'Jaipur, Rajasthan', price: '₹8 Cr', status: 'sold', area: '12000 sq ft', beds: null, enquiries: 5 },
-  { id: 'RE-003', title: '3 BHK Flat — Mansarovar', type: 'Residential', location: 'Jaipur, Rajasthan', price: '₹85 L', status: 'available', area: '1450 sq ft', beds: 3, enquiries: 23 },
-  { id: 'RE-004', title: 'Plot — Jagatpura', type: 'Plot', location: 'Jaipur, Rajasthan', price: '₹42 L', status: 'available', area: '500 sq yd', beds: null, enquiries: 18 },
-  { id: 'RE-005', title: 'Office Space — MI Road', type: 'Commercial', location: 'Jaipur, Rajasthan', price: '₹1.8 Cr', status: 'reserved', area: '2400 sq ft', beds: null, enquiries: 7 },
-]
+const PROPERTIES = []
 
-const ENQUIRIES = [
-  { id: 'REQ-001', name: 'Vikram Singh', email: 'vikram.s@email.com', property: 'Luxury Villa — Bani Park', budget: '₹2–3 Cr', status: 'new', date: '2026-04-06' },
-  { id: 'REQ-002', name: 'Neha Gupta', email: 'neha.g@email.com', property: '3 BHK Flat — Mansarovar', budget: '₹80–90 L', status: 'follow-up', date: '2026-04-04' },
-  { id: 'REQ-003', name: 'Sanjay Verma', email: 'sanjay.v@email.com', property: 'Plot — Jagatpura', budget: '₹40–50 L', status: 'closed', date: '2026-04-01' },
-  { id: 'REQ-004', name: 'Aarti Joshi', email: 'aarti.j@email.com', property: 'Office Space — MI Road', budget: '₹1.5–2 Cr', status: 'new', date: '2026-04-05' },
-]
+const ENQUIRIES = []
 
 const STATUS_COLORS = {
   available: 'badge-success',

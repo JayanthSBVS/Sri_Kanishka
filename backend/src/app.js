@@ -12,6 +12,7 @@ const path = require('path');
 const authRoutes = require('./routes/auth.routes');
 const matrimonyRoutes = require('./routes/matrimony.routes');
 const adminRoutes = require('./routes/admin.routes');
+const itTrainingRoutes = require('./routes/it-training.routes');
 const errorMiddleware = require('./middlewares/error.middleware');
 
 const app = express();
@@ -56,6 +57,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/matrimony', matrimonyRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/it-training', itTrainingRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────────────────────
 app.use((_req, res) => {

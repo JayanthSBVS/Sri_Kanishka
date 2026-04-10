@@ -48,7 +48,7 @@ export const UIProvider = ({ children }) => {
         }
     }, []);
 
-    const loginUser = (userData, newToken) => {
+    const loginUser = (newToken, userData) => {
         setToken(newToken);
         setUser(userData);
         setIsLoggedIn(true);

@@ -1,21 +1,8 @@
 import React, { useState } from 'react'
 
-const PROGRAMS = [
-  { id: 'MED-001', name: 'Maitri Havan', type: 'Havan Ceremony', schedule: 'Every Sunday 6:00 AM', seats: 40, booked: 28, status: 'active' },
-  { id: 'MED-002', name: 'Maitri Sambodh Dhyaan', type: 'Meditation', schedule: 'Mon, Wed, Fri 7:00 AM', seats: 25, booked: 25, status: 'full' },
-  { id: 'MED-003', name: 'Kundalini Awakening', type: 'Advanced Yoga', schedule: 'Saturdays 5:30 AM', seats: 15, booked: 9, status: 'active' },
-  { id: 'MED-004', name: 'Inner Peace Workshop', type: 'Workshop', schedule: '15 Apr 2026', seats: 50, booked: 32, status: 'upcoming' },
-  { id: 'MED-005', name: 'Spiritual Retreat', type: 'Retreat', schedule: '1-3 May 2026', seats: 20, booked: 5, status: 'upcoming' },
-]
+const PROGRAMS = []
 
-const REGISTRATIONS = [
-  { id: 'R-001', name: 'Sunita Patel', email: 'sunita.p@email.com', program: 'Maitri Havan', date: '2026-04-05', attendance: 'present' },
-  { id: 'R-002', name: 'Kiran Iyer', email: 'kiran.i@email.com', program: 'Maitri Sambodh Dhyaan', date: '2026-04-04', attendance: 'present' },
-  { id: 'R-003', name: 'Anand Kumar', email: 'anand.k@email.com', program: 'Inner Peace Workshop', date: '2026-04-03', attendance: 'registered' },
-  { id: 'R-004', name: 'Meena Sharma', email: 'meena.s@email.com', program: 'Kundalini Awakening', date: '2026-04-02', attendance: 'absent' },
-  { id: 'R-005', name: 'Ravi Nair', email: 'ravi.n@email.com', program: 'Spiritual Retreat', date: '2026-04-01', attendance: 'registered' },
-  { id: 'R-006', name: 'Priya Menon', email: 'priya.m@email.com', program: 'Maitri Havan', date: '2026-03-30', attendance: 'present' },
-]
+const REGISTRATIONS = []
 
 const STATUS_COLOR = {
   active: 'badge-success',

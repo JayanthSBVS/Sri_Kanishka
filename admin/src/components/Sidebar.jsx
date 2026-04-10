@@ -4,6 +4,7 @@ import { useAdminAuth } from '../context/AdminAuthContext'
 
 const NAV_ITEMS = [
   { path: '/dashboard', icon: '🏠', label: 'Dashboard' },
+  { path: '/users', icon: '👥', label: 'User Data' },
   { path: '/services/it-training', icon: '💻', label: 'IT Training & Consultancy' },
   { path: '/services/global-matrimony', icon: '💍', label: 'Global Matrimony' },
   { path: '/services/meditation', icon: '🧘', label: 'Meditation & Spirituality' },

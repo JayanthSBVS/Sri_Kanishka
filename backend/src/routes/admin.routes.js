@@ -67,4 +67,25 @@ router.get('/stats', async (req, res, next) => {
   }
 })
 
+/**
+ * DELETE /api/admin/users/:id
+ * Delete a user by ID (cannot delete yourself or last admin)
+ */
+router.delete('/users/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params
+    // Prevent deleting your own account
+    if (id === req.user.id) {
+      return res.status(400).json({ success: false, message: 'You cannot delete your own account.' })
+    }
+    const deleted = await userRepo.deleteById(id)
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'User not found.' })
+    }
+    res.json({ success: true, message: 'User deleted successfully.' })
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router

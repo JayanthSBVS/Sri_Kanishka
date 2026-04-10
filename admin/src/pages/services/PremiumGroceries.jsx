@@ -1,22 +1,8 @@
 import React, { useState } from 'react'
 
-const PRODUCTS = [
-  { id: 'GRO-001', name: 'Organic Whole Wheat Flour', category: 'Grains & Cereals', price: '₹120', stock: 45, unit: 'kg', status: 'in-stock' },
-  { id: 'GRO-002', name: 'Cold-Pressed Mustard Oil', category: 'Oils & Ghee', price: '₹280', stock: 22, unit: 'litre', status: 'in-stock' },
-  { id: 'GRO-003', name: 'Premium A2 Cow Ghee', category: 'Oils & Ghee', price: '₹780', stock: 8, unit: 'kg', status: 'low-stock' },
-  { id: 'GRO-004', name: 'Desi Basmati Rice', category: 'Grains & Cereals', price: '₹95', stock: 0, unit: 'kg', status: 'out-of-stock' },
-  { id: 'GRO-005', name: 'Organic Turmeric Powder', category: 'Spices', price: '₹180', stock: 60, unit: '100g', status: 'in-stock' },
-  { id: 'GRO-006', name: 'Raw Forest Honey', category: 'Honey & Sweeteners', price: '₹450', stock: 15, unit: '500ml', status: 'in-stock' },
-  { id: 'GRO-007', name: 'Amla Powder', category: 'Superfoods', price: '₹220', stock: 3, unit: '250g', status: 'low-stock' },
-]
+const PRODUCTS = []
 
-const ORDERS = [
-  { id: 'ORD-001', customer: 'Anita Sharma', email: 'anita.s@email.com', items: 4, total: '₹1,240', status: 'delivered', date: '2026-04-05' },
-  { id: 'ORD-002', customer: 'Rahul Mehta', email: 'rahul.m@email.com', items: 2, total: '₹860', status: 'processing', date: '2026-04-06' },
-  { id: 'ORD-003', customer: 'Seema Jain', email: 'seema.j@email.com', items: 6, total: '₹2,100', status: 'shipped', date: '2026-04-04' },
-  { id: 'ORD-004', customer: 'Mohan Lal', email: 'mohan.l@email.com', items: 1, total: '₹450', status: 'delivered', date: '2026-04-03' },
-  { id: 'ORD-005', customer: 'Kavita Singh', email: 'kavita.sg@email.com', items: 3, total: '₹1,500', status: 'pending', date: '2026-04-06' },
-]
+const ORDERS = []
 
 const STATUS_COLORS = {
   'in-stock': 'badge-success',

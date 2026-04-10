@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, User, ArrowRight } from 'lucide-react';
+import { Menu, X, ChevronDown, User, ArrowRight, Settings, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUI } from '../context/UIContext';
 import LoginModal from './LoginModal';
@@ -11,6 +11,7 @@ const Header = () => {
     const [hoveredService, setHoveredService] = useState(null);
     const location = useLocation();
     const { openLogin, isMobileMenuOpen, toggleMobileMenu, closeMobileMenu, isLoggedIn, logoutUser, user } = useUI();
+    const [showUserMenu, setShowUserMenu] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -109,15 +110,63 @@ const Header = () => {
 
                     <div className="hidden md:flex items-center space-x-4">
                         {isLoggedIn ? (
-                            <button
-                                onClick={logoutUser}
-                                className={`flex items-center space-x-2 px-6 py-2.5 rounded-full font-sans font-semibold transition-all duration-300 shadow-lg border border-gold-200 ${isScrolled ? 'bg-white text-gray-800 hover:bg-gray-50' : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md'}`}
-                            >
-                                <div className="w-6 h-6 -ml-2 rounded-full bg-gold-100 text-gold-600 flex items-center justify-center">
-                                    <User size={14} />
-                                </div>
-                                <span>{user?.name?.split(' ')[0] || 'User'} (Logout)</span>
-                            </button>
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowUserMenu(prev => !prev)}
+                                    onBlur={() => setTimeout(() => setShowUserMenu(false), 150)}
+                                    className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-sans font-semibold transition-all duration-300 shadow-lg border border-gold-200 ${isScrolled ? 'bg-white text-gray-800 hover:bg-gray-50' : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md'}`}
+                                >
+                                    <div className="w-7 h-7 rounded-full bg-gold-500 text-white flex items-center justify-center text-xs font-bold">
+                                        {user?.name?.charAt(0).toUpperCase() || 'U'}
+                                    </div>
+                                    <span className="max-w-[100px] truncate">{user?.name?.split(' ')[0] || 'User'}</span>
+                                    <ChevronDown size={14} className={`transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                <AnimatePresence>
+                                    {showUserMenu && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                                            transition={{ duration: 0.15 }}
+                                            className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50"
+                                        >
+                                            {/* User info header */}
+                                            <div className="px-4 py-3 bg-gradient-to-r from-gold-50 to-amber-50 border-b border-gray-100">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-9 h-9 rounded-full bg-gold-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                                                        {user?.name?.charAt(0).toUpperCase() || 'U'}
+                                                    </div>
+                                                    <div className="overflow-hidden">
+                                                        <div className="font-semibold text-gray-800 text-sm truncate">{user?.name || 'User'}</div>
+                                                        <div className="text-xs text-gray-500 truncate">{user?.email || ''}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Menu items */}
+                                            <div className="py-1">
+                                                <button
+                                                    onClick={() => setShowUserMenu(false)}
+                                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <Settings size={15} className="text-gray-400" />
+                                                    Settings
+                                                </button>
+                                                <hr className="my-1 border-gray-100" />
+                                                <button
+                                                    onClick={() => { logoutUser(); setShowUserMenu(false); }}
+                                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                                >
+                                                    <LogOut size={15} className="text-red-400" />
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         ) : (
                             <button
                                 onClick={openLogin}
@@ -157,15 +206,26 @@ const Header = () => {
                                 <Link to="/about" className="text-lg font-medium text-gray-800">About</Link>
                                 <Link to="/contact" className="text-lg font-medium text-gray-800">Contact</Link>
                                 {isLoggedIn ? (
-                                    <button
-                                        onClick={() => {
-                                            logoutUser();
-                                            closeMobileMenu();
-                                        }}
-                                        className="w-full py-3 bg-gray-100 text-gray-800 font-bold rounded-lg shadow-sm mt-4 border border-gray-200"
-                                    >
-                                        Logout ({user?.name || 'User'})
-                                    </button>
+                                    <div className="space-y-2 mt-4">
+                                        <div className="flex items-center gap-3 px-4 py-3 bg-gold-50 rounded-xl border border-gold-100">
+                                            <div className="w-9 h-9 rounded-full bg-gold-500 text-white flex items-center justify-center font-bold">
+                                                {user?.name?.charAt(0).toUpperCase() || 'U'}
+                                            </div>
+                                            <div>
+                                                <div className="font-semibold text-gray-800 text-sm">{user?.name || 'User'}</div>
+                                                <div className="text-xs text-gray-500">{user?.email || ''}</div>
+                                            </div>
+                                        </div>
+                                        <button className="w-full flex items-center gap-3 py-3 px-4 bg-gray-50 text-gray-700 font-semibold rounded-xl border border-gray-200">
+                                            <Settings size={16} className="text-gray-400" /> Settings
+                                        </button>
+                                        <button
+                                            onClick={() => { logoutUser(); closeMobileMenu(); }}
+                                            className="w-full flex items-center gap-3 py-3 px-4 bg-red-50 text-red-600 font-bold rounded-xl border border-red-100"
+                                        >
+                                            <LogOut size={16} className="text-red-400" /> Logout
+                                        </button>
+                                    </div>
                                 ) : (
                                     <button
                                         onClick={() => {

@@ -1,97 +1,87 @@
 /**
  * matrimony.repository.js
- * ONLY place that reads/writes matrimony_profiles.json.
- * To migrate to a database: replace this file only — services stay unchanged.
+ * Uses Neon PostgreSQL database via db.js.
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const fileLock = require('../utils/fileLock.util');
+const db = require('../config/db');
 
-const DB_PATH = path.join(__dirname, '../../data/matrimony_profiles.json');
-
-/**
- * Read all profiles from file.
- * @returns {Promise<Array>}
- */
 async function findAll() {
-  const raw = await fs.readFile(DB_PATH, 'utf8');
-  return JSON.parse(raw);
+  const { rows } = await db.query('SELECT * FROM matrimony_profiles');
+  return rows;
 }
 
-/**
- * Find a profile by its ID.
- * @param {string} id
- * @returns {Promise<Object|null>}
- */
 async function findById(id) {
-  const profiles = await findAll();
-  return profiles.find((p) => p.id === id) ?? null;
+  const { rows } = await db.query('SELECT * FROM matrimony_profiles WHERE id = $1', [id]);
+  return rows[0] || null;
 }
 
-/**
- * Return only profiles where status === 'active'.
- * @returns {Promise<Array>}
- */
 async function findActive() {
-  const profiles = await findAll();
-  return profiles.filter((p) => p.status === 'active');
+  const { rows } = await db.query('SELECT * FROM matrimony_profiles WHERE status = $1', ['active']);
+  return rows;
 }
 
-/**
- * Insert a new profile. Thread-safe via fileLock.
- * @param {Object} profile
- * @returns {Promise<Object>} The saved profile
- */
 async function create(profile) {
-  return fileLock.run(DB_PATH, async () => {
-    const profiles = await findAll();
-    profiles.push(profile);
-    await fs.writeFile(DB_PATH, JSON.stringify(profiles, null, 2), 'utf8');
-    return profile;
-  });
+  const {
+    id, userId, email, passwordHash, firstName, lastName,
+    phone, profileData, profilePhoto, status, paymentStatus,
+    transactionId, createdAt, updatedAt
+  } = profile;
+
+  await db.query(
+    `INSERT INTO matrimony_profiles (
+      id, "userId", email, "passwordHash", "firstName", "lastName",
+      phone, "profileData", "profilePhoto", status, "paymentStatus",
+      "transactionId", "createdAt", "updatedAt"
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+    [
+      id, userId, email, passwordHash, firstName, lastName,
+      phone, profileData, profilePhoto, status, paymentStatus,
+      transactionId, createdAt, updatedAt
+    ]
+  );
+  return profile;
 }
 
-/**
- * Update fields on an existing profile by ID. Thread-safe via fileLock.
- * @param {string} id
- * @param {Object} updates - Partial fields to merge
- * @returns {Promise<Object|null>} The updated profile, or null if not found
- */
 async function updateById(id, updates) {
-  return fileLock.run(DB_PATH, async () => {
-    const profiles = await findAll();
-    const index = profiles.findIndex((p) => p.id === id);
-    if (index === -1) return null;
+  // Dynamically build UPDATE query
+  const keys = Object.keys(updates);
+  if (keys.length === 0) return await findById(id);
 
-    profiles[index] = {
-      ...profiles[index],
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    };
-    await fs.writeFile(DB_PATH, JSON.stringify(profiles, null, 2), 'utf8');
-    return profiles[index];
-  });
+  const setParams = [];
+  const queryValues = [];
+  let paramIndex = 1;
+
+  for (const key of keys) {
+    // Quote camelCase keys correctly
+    const columnName = key === 'userId' || key === 'passwordHash' || key === 'firstName' || key === 'lastName' || 
+                       key === 'profileData' || key === 'profilePhoto' || key === 'paymentStatus' || 
+                       key === 'transactionId' || key === 'createdAt' || key === 'updatedAt' 
+                       ? `"${key}"` : key;
+    setParams.push(`${columnName} = $${paramIndex}`);
+    queryValues.push(updates[key]);
+    paramIndex++;
+  }
+
+  // Always update updatedAt
+  setParams.push(`"updatedAt" = $${paramIndex}`);
+  queryValues.push(new Date().toISOString());
+  paramIndex++;
+
+  queryValues.push(id);
+  const queryText = `UPDATE matrimony_profiles SET ${setParams.join(', ')} WHERE id = $${paramIndex} RETURNING *`;
+
+  const { rows } = await db.query(queryText, queryValues);
+  return rows[0] || null;
 }
 
-/**
- * Find a profile by userId.
- * @param {string} userId
- * @returns {Promise<Object|null>}
- */
 async function findByUserId(userId) {
-  const profiles = await findAll();
-  return profiles.find((p) => p.userId === userId) ?? null;
+  const { rows } = await db.query('SELECT * FROM matrimony_profiles WHERE "userId" = $1', [userId]);
+  return rows[0] || null;
 }
 
-/**
- * Find a profile by its email.
- * @param {string} email
- * @returns {Promise<Object|null>}
- */
 async function findByEmail(email) {
-  const profiles = await findAll();
-  return profiles.find((p) => p.email === email) ?? null;
+  const { rows } = await db.query('SELECT * FROM matrimony_profiles WHERE email = $1', [email]);
+  return rows[0] || null;
 }
 
 module.exports = { findAll, findById, findActive, create, updateById, findByUserId, findByEmail };

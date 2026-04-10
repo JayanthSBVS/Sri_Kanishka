@@ -1,22 +1,8 @@
 import React, { useState } from 'react'
 
-const APPLICATIONS = [
-  { id: 'AC-001', name: 'Ankit Sharma', email: 'ankit.s@email.com', phone: '9876500001', destination: 'Canada', purpose: 'Study', visa: 'Student Visa', status: 'in-progress', date: '2026-04-05', university: 'University of Toronto' },
-  { id: 'AC-002', name: 'Pooja Mishra', email: 'pooja.m@email.com', phone: '9876500002', destination: 'Australia', purpose: 'Work', visa: 'Work Visa', status: 'approved', date: '2026-04-02', university: null },
-  { id: 'AC-003', name: 'Rohit Gupta', email: 'rohit.g@email.com', phone: '9876500003', destination: 'UK', purpose: 'Study', visa: 'Student Visa', status: 'documents-pending', date: '2026-04-01', university: 'University of Edinburgh' },
-  { id: 'AC-004', name: 'Divya Nair', email: 'divya.n@email.com', phone: '9876500004', destination: 'Germany', purpose: 'Study', visa: 'Student Visa', status: 'new', date: '2026-03-30', university: 'TU Munich' },
-  { id: 'AC-005', name: 'Sameer Khan', email: 'sameer.k@email.com', phone: '9876500005', destination: 'USA', purpose: 'Work', visa: 'H1B Visa', status: 'rejected', date: '2026-03-28', university: null },
-  { id: 'AC-006', name: 'Kavya Reddy', email: 'kavya.r@email.com', phone: '9876500006', destination: 'New Zealand', purpose: 'PR', visa: 'PR Visa', status: 'in-progress', date: '2026-03-26', university: null },
-]
+const APPLICATIONS = []
 
-const DESTINATIONS = [
-  { country: '🇨🇦 Canada', applications: 12, approved: 8, icon: '🍁' },
-  { country: '🇦🇺 Australia', applications: 18, approved: 14, icon: '🦘' },
-  { country: '🇬🇧 United Kingdom', applications: 9, approved: 6, icon: '🎭' },
-  { country: '🇩🇪 Germany', applications: 7, approved: 5, icon: '🏰' },
-  { country: '🇺🇸 USA', applications: 15, approved: 10, icon: '🗽' },
-  { country: '🇳🇿 New Zealand', applications: 5, approved: 4, icon: '🥝' },
-]
+const DESTINATIONS = []
 
 const STATUS_COLORS = {
   new: 'badge-info',

@@ -1,353 +1,471 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Code, Terminal, Database, CheckCircle, ArrowRight, Briefcase, Sparkles, Star, Phone } from 'lucide-react';
-import { courses, jobOffers } from '../../data/mockData';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Code, Terminal, Database, CheckCircle, ArrowRight, Briefcase, Sparkles, Star, Phone, X, Layers, Target, Trophy, Users, BookOpen, Clock, BadgeCheck, Zap, Laptop, ShieldCheck, TrendingUp, Info } from 'lucide-react';
+import { courses as rawCourses, jobOffers } from '../../data/mockData';
 import { useUI } from '../../context/UIContext';
+import api from '../../api/client';
+
+// Detailed data per course including descriptive paragraphs
+const COURSE_EXTENSIONS = {
+    1: {
+        about: "Our Full Stack Development track is a rigorous architectural journey. We focus on building scalable, production-ready applications from the ground up. You will master the intricate dance between frontend reactivity and backend efficiency, learning how to handle state, security, and database optimization like a seasoned professional in a top-tier MNC.",
+        syllabus: ["Architecture of MERN", "React Hooks & Context", "Node.js Event Loop", "Database Indexing", "Deployment on AWS"],
+        outcomes: ["Certified Full Stack Architect", "10+ Real-world Projects", "Guaranteed MNC Interviews"],
+        salary: "8 - 15 LPA",
+        role: "Architecture Specialist"
+    },
+    2: {
+        about: "The Cloud & DevOps program is designed for those who want to build the backbone of the internet. You'll move beyond simple coding to understanding infrastructure as code. Our curriculum covers the entire automation lifecycle, teaching you how to manage massive traffic and ensure 99.9% uptime using the same tools used by companies like Netflix and Amazon.",
+        syllabus: ["AWS Core Services", "Docker Containerization", "Kubernetes Orchestration", "CI/CD Pipelines", "IaC with Terraform"],
+        outcomes: ["DevOps Professional Cert", "Cloud Migration Projects", "Infrastructure Mastery"],
+        salary: "12 - 25 LPA",
+        role: "Cloud Engineer"
+    },
+    3: {
+        about: "Dive deep into the era of intelligence. This track doesn't just teach you how to write Python; it teaches you how to make machines think. From statistical foundations to implementing complex neural networks, you will gain the expertise to turn raw data into actionable insights and build AI agents that can solve real-world problems autonomously.",
+        syllabus: ["Statistics for AI", "Machine Learning Models", "Deep Learning with TensorFlow", "Natural Language Processing", "Big Data Analytics"],
+        outcomes: ["AI Researcher Cert", "NLP & Vision Projects", "Data Strategy Board"],
+        salary: "15 - 30 LPA",
+        role: "Data Scientist"
+    },
+    4: {
+        about: "In an age of increasing digital threats, our Cybersecurity program prepares you to be the ultimate defender. We take an offensive-to-defensive approach, teaching you to think like a hacker to build impenetrable systems. You'll master network security, ethical hacking, and risk compliance, ensuring you're ready to protect vital enterprise data.",
+        syllabus: ["Network Penetration", "Risk Assessment", "Web App Security", "Incident Response", "Compliance Standards"],
+        outcomes: ["Certified Ethical Hacker", "Security Audit Projects", "Vulnerability Research"],
+        salary: "10 - 20 LPA",
+        role: "Security Auditor"
+    },
+};
 
 const ITServices = () => {
     const [activeTab, setActiveTab] = useState('courses');
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [expandedCourse, setExpandedCourse] = useState(null);
     const { openServiceModal } = useUI();
 
-    return (
-        <div className="pt-3 min-h-screen">
-            {/* Hero */}
-            {/* Hero */}
-            <section className="relative rounded-[2.5rem] margin-x-custom mx-4 md:mx-6 mb-16 overflow-hidden min-h-[500px] flex items-center shadow-2xl shadow-blue-100/50">
-                <div className="absolute inset-0">
-                    <img src="/images/it/hero-team.jpg" alt="IT Academy Team" className="w-full h-full object-cover" />
-                    {/* Clear Image - No Overlay */}
-                </div>
+    const openEnrollment = () => setIsFormOpen(true);
+    const closeEnrollment = () => setIsFormOpen(false);
 
-                {/* Decorative Elements - Subtle */}
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none mix-blend-multiply"></div>
+    const toggleDetails = (id) => {
+        setExpandedCourse(expandedCourse === id ? null : id);
+    };
+
+    return (
+        <div className="pt-3 min-h-screen bg-slate-50/30">
+            {/* Hero Section */}
+            <section className="relative rounded-[2.5rem] margin-x-custom mx-4 md:mx-6 mb-16 overflow-hidden min-h-[600px] flex items-center shadow-2xl shadow-blue-100/50">
+                <div className="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop" alt="IT Academy Team" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+                </div>
 
                 <div className="container-custom relative z-10 px-8 md:px-12 py-12">
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="max-w-3xl p-8 md:p-12 rounded-[2.5rem] bg-white/5 backdrop-blur-sm border border-white/10 shadow-xl relative overflow-hidden group"
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="max-w-3xl"
                     >
-                        {/* Mirror Reflection / Shimmer */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/5 to-transparent opacity-30 pointer-events-none"></div>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600/10 backdrop-blur-md border border-blue-600/20 text-blue-800 text-xs font-bold uppercase tracking-wider mb-8 shadow-sm">
+                            <Sparkles size={14} className="text-blue-600" />
+                            Premium Career Architecture
+                        </div>
 
-                        <div className="relative z-10">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-white/50 text-blue-800 text-xs font-bold uppercase tracking-wider mb-8 shadow-sm">
-                                <Sparkles size={14} className="text-blue-600" />
-                                Tech Academy
-                            </div>
+                        <h1 className="text-5xl md:text-8xl font-bold mb-6 text-gray-900 font-display leading-tight">
+                            Build Your <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700">Tech Future</span>
+                        </h1>
+                        <p className="text-xl text-gray-700 max-w-2xl mb-12 leading-relaxed font-medium">
+                            Industry-validated curriculum, live project experience, and guaranteed placement support from architects working in top MNCs.
+                        </p>
 
-                            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gray-900 font-display leading-tight drop-shadow-sm">
-                                Launch Your <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-700">IT Career Today</span>
-                            </h1>
-                            <p className="text-xl text-gray-800 max-w-2xl mb-12 leading-relaxed font-sans font-medium">
-                                Master the latest technologies with our industry-aligned curriculum. From full-stack development to cloud engineers, we build the future workforce.
-                            </p>
-                            <div className="flex flex-wrap gap-4">
-                                <button
-                                    onClick={() => setActiveTab('courses')}
-                                    className={`px-8 py-4 rounded-full font-bold transition-all shadow-lg hover:-translate-y-1 ${activeTab === 'courses' ? 'bg-gradient-to-r from-blue-700 to-indigo-700 text-white shadow-blue-200' : 'bg-white/50 text-gray-900 hover:bg-white border border-white/50'}`}
-                                >
-                                    Browse Courses
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('jobs')}
-                                    className={`px-8 py-4 rounded-full font-bold transition-all shadow-lg hover:-translate-y-1 ${activeTab === 'jobs' ? 'bg-gradient-to-r from-green-600 to-emerald-700 text-white shadow-green-200' : 'bg-white/50 text-gray-900 hover:bg-white border border-white/50'}`}
-                                >
-                                    View Job Offers
-                                </button>
-                            </div>
+                        <div className="flex flex-wrap gap-6">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={openEnrollment}
+                                className="px-10 py-5 rounded-2xl bg-gradient-to-r from-blue-700 to-indigo-800 text-white font-bold shadow-xl shadow-blue-200 flex items-center gap-3 text-lg"
+                            >
+                                Apply Now <ArrowRight size={20} />
+                            </motion.button>
+                            <button
+                                onClick={() => setActiveTab('courses')}
+                                className="px-10 py-5 rounded-2xl bg-white text-gray-900 font-bold border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all shadow-lg text-lg"
+                            >
+                                Browse Courses
+                            </button>
                         </div>
                     </motion.div>
                 </div>
             </section>
 
-
-            {/* Features & Benefits */}
-            <section className="py-12">
-                <div className="container-custom">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        {[
-                            { title: "Live Projects", desc: "Gain hands-on experience with real-world industry scenarios.", icon: Terminal },
-                            { title: "Expert Mentors", desc: "Learn directly from architects working in top MNCs.", icon: CheckCircle },
-                            { title: "Placement Support", desc: "Dedicated HR team for resume building and interview coaching.", icon: Briefcase },
-                            { title: "Corporate Consultancy", desc: "We provide specialized staffing and corporate training solutions.", icon: Database }
-                        ].map((feature, idx) => (
-                            <div key={idx} className="p-6 rounded-3xl bg-white/40 border border-slate-100 hover:bg-white hover:shadow-xl hover:border-blue-100 transition-all duration-300 group">
-                                <div className="w-12 h-12 bg-white rounded-2xl shadow-sm text-blue-600 flex items-center justify-center mb-4 border border-slate-100 group-hover:scale-110 transition-transform">
-                                    <feature.icon size={24} />
-                                </div>
-                                <h3 className="font-bold text-lg text-gray-900 mb-2 font-display">{feature.title}</h3>
-                                <p className="text-sm text-gray-500 leading-relaxed">{feature.desc}</p>
-                            </div>
-                        ))}
+            {/* Courses / Skills Section */}
+            <div className="container-custom py-12">
+                <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
+                    <div>
+                        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 font-display">Specialized Tracks</h2>
+                        <p className="text-gray-500 mt-2 text-lg">Detailed curriculum for aspiring software architects.</p>
                     </div>
-                </div>
-            </section>
-
-            {/* Methodology Text */}
-            <section className="py-20 bg-white/40 backdrop-blur-md rounded-[3rem] mx-4 md:mx-6 mb-20 shadow-xl shadow-gold-900/10 relative overflow-hidden">
-                {/* Decorative Background */}
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600"></div>
-                <div className="absolute -left-20 top-20 w-64 h-64 bg-blue-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-                <div className="absolute -right-20 bottom-20 w-64 h-64 bg-gold-50 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-
-                <div className="container-custom relative z-10">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 font-bold tracking-widest uppercase text-xs mb-6 border border-blue-100">Our Philosophy</span>
-                        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 font-display">From Classroom to Boardroom</h2>
-                        <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                            Our curriculum isn't just about code; it's about career architecture. We painstakingly design every module to mirror real-world software engineering challenges. You won't just learn syntax; you'll learn system design, scalability, and agile methodologies.
-                        </p>
-                        <p className="text-xl text-gray-600 leading-relaxed">
-                            Our goal is to transform you into a <strong>Day-1 ready professional</strong> who can contribute to major projects immediately. We bridge the gap between academic theory and industrial application through immersive, project-based learning.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <div className="container-custom pb-20">
-                {activeTab === 'courses' ? (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="space-y-12"
-                    >
-                        {courses.map((course, index) => (
-                            <div key={course.id} className="bg-white rounded-[2.5rem] p-6 md:p-8 card-shadow border border-gray-100 hover:border-blue-200 transition-all duration-300 group flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                                {/* Left Content: Information */}
-                                <div className={`flex-1 w-full order-2 ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-blue-100">
-                                            {course.level}
-                                        </span>
-                                        <span className="flex items-center gap-1 text-xs font-bold text-gray-500">
-                                            <Sparkles size={12} className="text-gold-400 fill-gold-400" /> {course.rating} ({course.reviews} reviews)
-                                        </span>
-                                    </div>
-
-                                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 font-display leading-tight">{course.title}</h3>
-
-                                    <p className="text-gray-600 mb-6 leading-relaxed">
-                                        Master {course.tech.join(', ')} and build real-world applications. This comprehensive course is designed to take you from {course.level.toLowerCase()} level to industry-ready.
-                                    </p>
-
-                                    <div className="mb-8 p-6 bg-blue-50/50 rounded-2xl border border-blue-100">
-                                        <h4 className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wide">What you'll learn:</h4>
-                                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600">
-                                            {[
-                                                "Industry-standard coding practices",
-                                                "Real-time project implementation",
-                                                "System design & architecture",
-                                                "Performance optimization techniques",
-                                                "Interview preparation & mock tests",
-                                                "Job assistance & carrier guidance"
-                                            ].map((feature, idx) => (
-                                                <li key={idx} className="flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                                                    {feature}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-
-                                    <div className="flex flex-wrap items-center gap-2 mb-8">
-                                        {course.tech.map((t, i) => (
-                                            <span key={i} className="text-sm font-semibold bg-gray-50 text-gray-700 px-4 py-2 rounded-xl border border-gray-200 group-hover:border-blue-200 group-hover:bg-blue-50/50 transition-colors">
-                                                {t}
-                                            </span>
-                                        ))}
-                                    </div>
-
-                                    <div className="flex items-center justify-between mt-auto">
-                                        <div className="text-gray-900 font-bold text-lg">
-                                            <span className="text-gray-400 font-normal text-sm block">Duration</span>
-                                            {course.duration}
-                                        </div>
-                                        <motion.button
-                                            whileTap={{ scale: 0.98 }}
-                                            onClick={() => openServiceModal('it', `Enroll: ${course.title}`)}
-                                            className="px-8 py-3 bg-gray-900 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-blue-600 transition-colors shadow-lg shadow-gray-200"
-                                        >
-                                            View Details <ArrowRight size={16} />
-                                        </motion.button>
-                                    </div>
-                                </div>
-
-                                {/* Right Content: Image */}
-                                <div className={`flex-1 w-full h-64 md:h-80 relative rounded-[2rem] overflow-hidden group-hover:shadow-2xl transition-shadow duration-500 order-1 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
-                                    <img
-                                        src={course.image}
-                                        alt={course.title}
-                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
-                                </div>
-                            </div>
-                        ))}
-                    </motion.div>
-                ) : (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                    >
-                        {jobOffers.map((job) => (
-                            <div key={job.id} className="bg-white p-8 rounded-[2rem] card-shadow border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 hover:border-green-100 transition-colors">
-                                <div>
-                                    <div className="inline-block px-3 py-1 rounded-md bg-green-50 text-green-700 text-xs font-bold mb-3">Hiring Now</div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-1 font-display">{job.role}</h3>
-                                    <p className="text-gray-500 font-medium mb-4">{job.company}</p>
-                                    <div className="flex gap-3 text-sm font-medium">
-                                        <span className="flex items-center gap-1 text-gray-600"><Briefcase size={14} className="text-green-500" /> {job.package}</span>
-                                        <span className="flex items-center gap-1 text-gray-400">|</span>
-                                        <span className="flex items-center gap-1 text-gray-600">{job.location}</span>
-                                    </div>
-                                </div>
-                                <motion.button
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => openServiceModal('it', `Job Application: ${job.role}`)}
-                                    className="px-8 py-3 bg-gray-900 text-white rounded-full font-bold hover:bg-green-600 transition-all shadow-lg shrink-0 w-full sm:w-auto"
-                                >
-                                    Apply
-                                </motion.button>
-                            </div>
-                        ))}
-                    </motion.div>
-                )}
-            </div>
-
-            {/* Process / Journey Section */}
-            <section className="py-20 border-y border-white/50">
-                <div className="container-custom">
-                    <div className="text-center max-w-3xl mx-auto mb-16">
-                        <span className="text-blue-600 font-bold tracking-widest uppercase text-xs mb-3 block">Your Path to Success</span>
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 font-display">From Beginner to Professional</h2>
-                        <p className="text-gray-600 leading-relaxed">
-                            Our structured roadmap ensures you are ready for the industry challenges from day one.
-                        </p>
-                    </div>
-
-                    <div className="relative">
-                        {/* Connecting Line */}
-                        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -z-10 hidden md:block border-t border-dashed border-gray-300"></div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                            {[
-                                { step: "01", title: "Enroll & Assess", desc: "Skill gap analysis and personalized learning path." },
-                                { step: "02", title: "Master Skills", desc: "Intensive training with live coding sessions." },
-                                { step: "03", title: "Build Portfolio", desc: "Work on capstone projects and open source contribution." },
-                                { step: "04", title: "Get Hired", desc: "Mock interviews, resume prep, and placement drives." }
-                            ].map((item, idx) => (
-                                <div key={idx} className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 relative group hover:-translate-y-2 transition-transform duration-300">
-                                    <div className="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold text-lg mb-6 shadow-blue-200 shadow-md group-hover:scale-110 transition-transform">
-                                        {item.step}
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3 font-display">{item.title}</h3>
-                                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Testimonials Section */}
-            <section className="py-20">
-                <div className="container-custom">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-                        <div className="max-w-xl">
-                            <span className="text-blue-600 font-bold tracking-widest uppercase text-xs mb-3 block">Success Stories</span>
-                            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 font-display">Hear from our Alumni</h2>
-                        </div>
-                        <button className="hidden md:block px-6 py-3 rounded-full border border-gray-200 font-bold text-gray-600 hover:bg-gray-50 transition-colors">
-                            View All Reviews
+                    <div className="bg-white p-2 rounded-2xl shadow-lg border border-gray-100 flex gap-2">
+                        <button
+                            onClick={() => setActiveTab('courses')}
+                            className={`px-8 py-3 rounded-xl font-bold transition-all ${activeTab === 'courses' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
+                        >
+                            Courses
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('jobs')}
+                            className={`px-8 py-3 rounded-xl font-bold transition-all ${activeTab === 'jobs' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
+                        >
+                            Placements
                         </button>
                     </div>
+                </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { name: "Priya Sharma", role: "Frontend Developer at Infosys", image: "https://randomuser.me/api/portraits/women/44.jpg", quote: "The live projects were a game changer. I could talk confidently about my code during the interview." },
-                            { name: "Rahul Verma", role: "Software Engineer at TCS", image: "https://randomuser.me/api/portraits/men/32.jpg", quote: "Mentors are very supportive. They helped me debug my code even late at night. improved my problem solving skills." },
-                            { name: "Anjali Gupta", role: "React Developer at Wipro", image: "https://randomuser.me/api/portraits/women/65.jpg", quote: "Kanishka Sri's placement team is amazing. They prepared me for HR rounds and technical tests thoroughly." }
-                        ].map((testimonial, idx) => (
-                            <div key={idx} className="p-8 rounded-[2rem] bg-indigo-50/50 hover:bg-white hover:shadow-xl border border-transparent hover:border-indigo-100 transition-all duration-300">
-                                <div className="flex items-center gap-4 mb-6">
-                                    <img src={testimonial.image} alt={testimonial.name} className="w-14 h-14 rounded-full border-2 border-white shadow-sm" />
-                                    <div>
-                                        <div className="font-bold text-gray-900">{testimonial.name}</div>
-                                        <div className="text-xs text-blue-600 font-medium">{testimonial.role}</div>
+                <AnimatePresence mode="wait">
+                    {activeTab === 'courses' ? (
+                        <motion.div
+                            key="courses"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="space-y-12"
+                        >
+                            {rawCourses.map((course, idx) => {
+                                const ext = COURSE_EXTENSIONS[course.id] || {
+                                    about: `This ${course.title} course is designed to take you from foundational concepts to advanced architectural patterns. You'll spend significant time on live projects, ensuring that you graduate not just with a certificate, but with a portfolio that speaks volumes about your capability as a first-day-ready professional.`,
+                                    outcomes: ["Professional Cert", "Capston Project", "MNC Prep"],
+                                    salary: "6 - 12 LPA",
+                                    role: "Software Professional",
+                                    syllabus: ["Fundamentals", "Advanced Modules", "Project"]
+                                };
+                                return (
+                                    <motion.div
+                                        key={course.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        className={`bg-white rounded-[3rem] overflow-hidden shadow-xl border border-gray-100 flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-stretch min-h-[450px] transition-all duration-500 hover:shadow-2xl`}
+                                    >
+                                        {/* Image Side */}
+                                        <div className="md:w-5/12 relative min-h-[300px] md:min-h-full overflow-hidden group">
+                                            <img src={course.image} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt={course.title} />
+                                            <div className="absolute top-6 left-6">
+                                                <span className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold text-blue-700 shadow-xl border border-white/50">{course.level}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Content Side */}
+                                        <div className="md:w-7/12 p-8 md:p-14 flex flex-col justify-center">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className="flex items-center gap-2 text-amber-500 font-bold">
+                                                    <Star size={18} fill="currentColor" /> {course.rating} <span className="text-gray-400 font-medium ml-1">({course.reviews} Students)</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-gray-500 font-bold text-sm">
+                                                    <Clock size={16} /> {course.duration}
+                                                </div>
+                                            </div>
+
+                                            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 font-display leading-tight">{course.title}</h3>
+
+                                            <div className="flex flex-wrap gap-2 mb-6">
+                                                {course.tech.map((t, i) => (
+                                                    <span key={i} className="px-4 py-1.5 bg-blue-50 text-blue-600 text-[11px] font-bold rounded-full border border-blue-100 shadow-sm">{t}</span>
+                                                ))}
+                                            </div>
+
+                                            {/* DESCRIPTIVE ABOUT PARAGRAPH */}
+                                            <div className="mb-8">
+                                                <div className="flex items-center gap-2 text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-3">
+                                                    <Info size={12} /> Course Overview
+                                                </div>
+                                                <p className="text-gray-600 leading-relaxed text-[15px] font-medium">
+                                                    {ext.about}
+                                                </p>
+                                            </div>
+
+                                            {/* Key Info Grid */}
+                                            <div className="grid grid-cols-2 gap-6 mb-8 border-y border-gray-50 py-6">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center flex-shrink-0">
+                                                        <TrendingUp size={20} />
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Est. Salary</div>
+                                                        <div className="font-bold text-gray-900">{ext.salary}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
+                                                        <Laptop size={20} />
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Future Role</div>
+                                                        <div className="font-bold text-gray-900">{ext.role}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col sm:flex-row gap-4">
+                                                <button
+                                                    onClick={() => toggleDetails(course.id)}
+                                                    className={`px-8 py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 border-2 ${expandedCourse === course.id ? 'bg-gray-100 border-gray-100' : 'bg-white border-blue-600 text-blue-600 hover:bg-blue-50 shadow-md shadow-blue-50'}`}
+                                                >
+                                                    {expandedCourse === course.id ? 'Hide Details' : 'View Syllabus'} <BookOpen size={18} />
+                                                </button>
+                                                <button
+                                                    onClick={openEnrollment}
+                                                    className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-gray-900 transition-all shadow-xl shadow-blue-100 flex items-center justify-center gap-2"
+                                                >
+                                                    Apply Now <ArrowRight size={18} />
+                                                </button>
+                                            </div>
+
+                                            {/* Expandable Details Area */}
+                                            <AnimatePresence>
+                                                {expandedCourse === course.id && (
+                                                    <motion.div
+                                                        initial={{ height: 0, opacity: 0 }}
+                                                        animate={{ height: 'auto', opacity: 1 }}
+                                                        exit={{ height: 0, opacity: 0 }}
+                                                        className="overflow-hidden"
+                                                    >
+                                                        <div className="mt-10 pt-8 border-t border-gray-100 grid grid-cols-1 gap-8">
+                                                            <div>
+                                                                <div className="text-sm font-bold text-blue-700 uppercase tracking-widest mb-6 flex items-center gap-2">
+                                                                    <Layers size={16} /> Technical Curriculum
+                                                                </div>
+                                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                                    {ext.syllabus.map((item, i) => (
+                                                                        <div key={i} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3 text-sm text-gray-700 font-bold group/skill hover:bg-white hover:border-blue-200 transition-all">
+                                                                            <ShieldCheck size={16} className="text-blue-500 group-hover/skill:scale-125 transition-transform" /> {item}
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                            <div className="bg-gradient-to-br from-gray-900 to-slate-800 p-8 rounded-[2.5rem] text-white">
+                                                                <div className="flex items-center gap-3 mb-6">
+                                                                    <Zap size={20} className="text-amber-400" />
+                                                                    <div className="font-bold text-lg">Value Proposition</div>
+                                                                </div>
+                                                                <ul className="space-y-4">
+                                                                    {[
+                                                                        "200+ hours of live architecture training",
+                                                                        "One-to-one mentorship with MNC Leads",
+                                                                        "Weekly mock interviews & resume building",
+                                                                        "Lifetime access to our recruitment portal"
+                                                                    ].map((benefit, i) => (
+                                                                        <li key={i} className="text-sm text-gray-300 flex items-start gap-3">
+                                                                            <CheckCircle size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" /> {benefit}
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="jobs"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="space-y-6"
+                        >
+                            {jobOffers.map((job) => (
+                                <div key={job.id} className="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-xl hover:border-emerald-200 transition-colors flex flex-col md:flex-row items-center justify-between gap-8">
+                                    <div className="flex items-center gap-6">
+                                        <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 font-bold text-xxl shadow-sm border border-emerald-100">{job.role[0]}</div>
+                                        <div>
+                                            <div className="inline-block px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-widest mb-2 border border-emerald-100">Active Hiring</div>
+                                            <h3 className="text-2xl font-bold text-gray-900 font-display">{job.role}</h3>
+                                            <p className="text-gray-500 font-medium">{job.company} • {job.location}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-12 text-center md:text-left">
+                                        <div>
+                                            <div className="text-3xl font-bold text-gray-900 font-display">{job.package}</div>
+                                            <div className="text-xs text-gray-400 font-bold uppercase tracking-widest">Base CTC</div>
+                                        </div>
+                                        <button
+                                            onClick={openEnrollment}
+                                            className="px-10 py-5 bg-gray-900 text-white rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-xl"
+                                        >
+                                            Quick Apply
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="flex text-amber-400 mb-4 gap-1">
-                                    {[1, 2, 3, 4, 5].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* Testimonials */}
+            <section className="py-24 bg-slate-900 text-white rounded-[4rem] mx-4 md:mx-6 mb-20 shadow-2xl overflow-hidden relative">
+                <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+                <div className="container-custom relative z-10">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-bold font-display mb-4">Minds Transformed</h2>
+                        <p className="text-gray-400">Success stories from top MNC architects.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {[
+                            { name: "Priya Sharma", role: "Sr. Dev @ Infosys", text: "The architectural depth of this program is unmatched in India." },
+                            { name: "Rahul Verma", role: "Cloud Lead @ TCS", text: "From basics to Kubernetes, the transition was seamless." },
+                            { name: "Anita Gupta", role: "Architect @ Wipro", text: "Best investment for a high-pay IT career." }
+                        ].map((t, i) => (
+                            <div key={i} className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-md">
+                                <div className="text-blue-400 mb-6 font-display text-4xl">"</div>
+                                <p className="text-gray-300 mb-8 italic text-lg leading-relaxed">{t.text}</p>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center font-bold">{t.name[0]}</div>
+                                    <div>
+                                        <div className="font-bold text-white">{t.name}</div>
+                                        <div className="text-xs text-blue-400 font-bold uppercase tracking-widest">{t.role}</div>
+                                    </div>
                                 </div>
-                                <p className="text-gray-600 italic leading-relaxed">"{testimonial.quote}"</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Placement Stats & Partners */}
-            <section className="py-20 bg-[#1F1209] text-white rounded-t-[3rem] mt-auto">
+            {/* Final Contact Strip */}
+            <section className="py-20 text-center">
                 <div className="container-custom">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20 text-center divide-x divide-white/10">
-                        <div>
-                            <div className="text-4xl md:text-5xl font-bold text-gold-500 mb-2 font-display">500+</div>
-                            <div className="text-sm md:text-base text-gold-100/60 font-medium">Students Placed</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl md:text-5xl font-bold text-gold-500 mb-2 font-display">24 LPA</div>
-                            <div className="text-sm md:text-base text-gold-100/60 font-medium">Highest Package</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl md:text-5xl font-bold text-gold-500 mb-2 font-display">50+</div>
-                            <div className="text-sm md:text-base text-gold-100/60 font-medium">Hiring Partners</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl md:text-5xl font-bold text-gold-500 mb-2 font-display">92%</div>
-                            <div className="text-sm md:text-base text-gold-100/60 font-medium">Success Rate</div>
-                        </div>
-                    </div>
-
-                    <div className="text-center mt-20">
-                        <p className="text-gold-100/40 text-sm uppercase tracking-widest mb-8 font-bold">Our Alumni Work At</p>
-                        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
-                            {['Google', 'Microsoft', 'Amazon', 'TCS', 'Infosys', 'Wipro'].map((company, i) => (
-                                <span key={i} className="text-xl md:text-2xl font-bold font-display text-white">{company}</span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* IT Contact Strip */}
-                <div className="container-custom mt-24">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        className="p-10 rounded-[2.5rem] bg-gradient-to-r from-blue-600 to-indigo-700 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/20"
-                    >
-                        <div className="flex items-center gap-6">
-                            <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20">
-                                <Phone size={32} />
-                            </div>
-                            <div className="text-left">
-                                <h3 className="text-2xl font-bold font-display">Ready to start your tech journey?</h3>
-                                <p className="text-blue-100/70">Contact our admissions team for course details and seat availability.</p>
-                            </div>
-                        </div>
-                        <div className="flex flex-col items-center md:items-end gap-2">
-                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-200">Name: Chanakya</span>
-                            <a href="tel:9441809692" className="text-3xl font-bold font-display hover:text-gold-400 transition-colors">
-                                9441809692
-                            </a>
-                        </div>
-                    </motion.div>
+                    <span className="text-xs font-bold uppercase tracking-[0.4em] text-gray-400 mb-4 block">Ready to start?</span>
+                    <a href="tel:9441809692" className="text-5xl md:text-6xl font-black text-gray-900 hover:text-blue-600 transition-colors font-display">9441809692</a>
+                    <div className="text-sm text-gray-400 mt-6 font-medium tracking-wide">ADMISSIONS OFFICE: CHANAKYA SRIPATHI</div>
                 </div>
             </section>
-        </div >
+
+            {/* Enrollment Form Modal */}
+            <AnimatePresence>
+                {isFormOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-md bg-gray-900/60"
+                        onClick={closeEnrollment}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                            onClick={e => e.stopPropagation()}
+                            className="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl relative overflow-hidden"
+                        >
+                            <button
+                                onClick={closeEnrollment}
+                                className="absolute top-8 right-8 w-10 h-10 rounded-full bg-slate-50 text-gray-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors z-20"
+                            >
+                                <X size={20} />
+                            </button>
+
+                            <div className="p-8 md:p-12">
+                                <EnrollmentForm onClose={closeEnrollment} />
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
+
+// ── Enrollment Form Component ─────────────────────────────────────────────────
+const COURSE_OPTIONS = [
+    'Full Stack Development', 'Data Science & AI', 'Cloud & DevOps',
+    'Python Programming', 'Cybersecurity', 'Web Design (UI/UX)',
+    'Java & Spring Boot', 'React & Node.js', 'Digital Marketing', 'Other',
+];
+
+const EnrollmentForm = ({ onClose }) => {
+    const [form, setForm] = useState({ name: '', email: '', phone: '', course: '', experience: '', message: '' });
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState('');
+    const [error, setError] = useState('');
+
+    const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true); setError(''); setSuccess('');
+        try {
+            const res = await api.post('/it-training/enquiry', form);
+            if (res.data.success) {
+                setSuccess('✅ Success! Our counselor will call you within 24 hours.');
+                setForm({ name: '', email: '', phone: '', course: '', experience: '', message: '' });
+                setTimeout(() => {
+                    if (onClose) onClose();
+                }, 3000);
+            } else {
+                setError(res.data.message || 'Submission failed.');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Could not connect to server.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="relative">
+            <div className="mb-10">
+                <h3 className="text-3xl font-bold text-gray-900 font-display mb-2">Apply for Selection</h3>
+                <p className="text-gray-500 text-sm font-medium">Join the next batch of elite tech professionals.</p>
+            </div>
+
+            {success && <div className="mb-8 p-6 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 font-bold text-center animate-pulse shadow-sm">{success}</div>}
+            {error && <div className="mb-8 p-6 rounded-2xl bg-red-50 border border-red-100 text-red-600 font-bold text-center shadow-sm">{error}</div>}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                        <input type="text" name="name" required value={form.name} onChange={handleChange} placeholder="Enter your name" className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all shadow-sm font-medium" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                        <input type="email" name="email" required value={form.email} onChange={handleChange} placeholder="your@email.com" className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all shadow-sm font-medium" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Phone</label>
+                        <input type="tel" name="phone" required value={form.phone} onChange={handleChange} placeholder="+91 00000 00000" className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all shadow-sm font-medium" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Course</label>
+                        <select name="course" required value={form.course} onChange={handleChange} className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all shadow-sm font-medium appearance-none">
+                            <option value="">Select Course</option>
+                            {COURSE_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Professional Experience</label>
+                    <select name="experience" value={form.experience} onChange={handleChange} className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all shadow-sm font-medium appearance-none">
+                        <option value="">Choose Level</option>
+                        <option value="Beginner">Student / New Graduate</option>
+                        <option value="Intermediate">1-3 Years Experience</option>
+                        <option value="Advanced">3+ Years Experience (Senior Role)</option>
+                    </select>
+                </div>
+                <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Your Goals</label>
+                    <textarea name="message" value={form.message} onChange={handleChange} rows={2} placeholder="What do you want to achieve with this course?" className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all shadow-sm resize-none font-medium" />
+                </div>
+                <button type="submit" disabled={loading} className="w-full py-5 bg-blue-600 text-white font-bold rounded-2xl shadow-xl shadow-blue-100 hover:scale-[1.01] active:scale-95 transition-all text-lg mt-4">
+                    {loading ? 'Submitting Application...' : 'Send Selection Form'}
+                </button>
+            </form>
+        </div>
     );
 };
 

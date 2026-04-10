@@ -1,58 +1,37 @@
 /**
  * user.repository.js
- * ONLY place that reads/writes users.json.
- * To migrate to a database: replace this file only — services stay unchanged.
+ * Uses Neon PostgreSQL database via db.js.
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const fileLock = require('../utils/fileLock.util');
+const db = require('../config/db');
 
-const DB_PATH = path.join(__dirname, '../../data/users.json');
-
-/**
- * Read all users from file.
- * @returns {Promise<Array>}
- */
 async function findAll() {
-  const raw = await fs.readFile(DB_PATH, 'utf8');
-  return JSON.parse(raw);
+  const { rows } = await db.query('SELECT * FROM users');
+  return rows;
 }
 
-/**
- * Find a single user by email (case-insensitive).
- * @param {string} email
- * @returns {Promise<Object|null>}
- */
 async function findByEmail(email) {
-  const users = await findAll();
-  return users.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase()
-  ) ?? null;
+  const { rows } = await db.query('SELECT * FROM users WHERE LOWER(email) = LOWER($1)', [email]);
+  return rows[0] || null;
 }
 
-/**
- * Find a single user by ID.
- * @param {string} id
- * @returns {Promise<Object|null>}
- */
 async function findById(id) {
-  const users = await findAll();
-  return users.find((u) => u.id === id) ?? null;
+  const { rows } = await db.query('SELECT * FROM users WHERE id = $1', [id]);
+  return rows[0] || null;
 }
 
-/**
- * Insert a new user. Thread-safe via fileLock.
- * @param {Object} user
- * @returns {Promise<Object>} The saved user
- */
 async function create(user) {
-  return fileLock.run(DB_PATH, async () => {
-    const users = await findAll();
-    users.push(user);
-    await fs.writeFile(DB_PATH, JSON.stringify(users, null, 2), 'utf8');
-    return user;
-  });
+  const { id, name, email, passwordHash, role, createdAt } = user;
+  await db.query(
+    'INSERT INTO users (id, name, email, "passwordHash", role, "createdAt") VALUES ($1, $2, $3, $4, $5, $6)',
+    [id, name, email, passwordHash, role, createdAt]
+  );
+  return user;
 }
 
-module.exports = { findAll, findByEmail, findById, create };
+async function deleteById(id) {
+  const { rowCount } = await db.query('DELETE FROM users WHERE id = $1', [id]);
+  return rowCount > 0;
+}
+
+module.exports = { findAll, findByEmail, findById, create, deleteById };
